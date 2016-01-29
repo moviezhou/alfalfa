@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="/stylesheets/normalize.css"/>
+    <link rel="stylesheet" href="/stylesheets/foundation.css"/>
+    <link rel="stylesheet" href="/stylesheets/emmet.css"/>
+    <link rel="stylesheet" href="/foundation-icons/foundation-icons.css"/>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <script src="/javascripts/vendor/jquery.js"></script>
+    <script src="/javascripts/foundation.min.js"></script>
+</head>
+<body>
+<div class="sticky">
+    <nav class="tab-bar" data-topbar role="navigation" data-options="sticky_on: large">
+        <section class="middle tab-bar-section">
+            <ul class="title-area">
+                <li class="name">
+                    <h1>
+                        <a href="#">Ewaybot</a>
+                    </h1>
+                </li>
+            </ul>
+        </section>
+    </nav>
+</div>
+<div class="signup-wrapper">
+    <h1>Join Ewaybot</h1>
+    <form data-abide="" id="signup-form" method="post" action="/signup">
+        <div class="textbox">
+            <div class="username">
+                <div class="name-field">
+                    <input id="user-name" type="text" autocomplete="off" value="" name="username" required maxlength="20" placeholder="User name" class="">
+                    <small class="error">Name is required</small>
+                </div>
+            </div>
+            <div class="email-field">
+                <input id="email" class="email-input" type="email" autocomplete="off" value="" name="email" required placeholder="Email">
+                <small class="error">Email address is required</small>
+            </div>
+            <div class="password-field">
+                <input id="password" type="password" value="" name="password" required placeholder="Password" class="">
+                <small class="error">Password is required</small>
+            </div>
+        </div>
+        <div class="doit">
+            <div class="sign-up-box">
+                <input class="button expand" type="submit" id="submit-button" value="Sign up">
+            </div>
+
+            <div class="befound">
+                <p>By signing up, you agree to the Terms of Service and Privacy Policy.</p>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    $(document).foundation();
+</script>
+</body>
+</html>

@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="/stylesheets/normalize.css"/>
+    <link rel="stylesheet" href="/stylesheets/foundation.css"/>
+    <link rel="stylesheet" href="/foundation-icons/foundation-icons.css"/>
+    <link rel="stylesheet" href="/stylesheets/emmet.css"/>
+    <title>Ewaybot</title>
+</head>
+<body>
+<section id="main">
+    <div class="off-canvas-wrap" data-offcanvas>
+        <div class="inner-wrap">
+            <div class="sticky">
+                <nav class="tab-bar" data-topbar role="navigation" data-options="sticky_on: large">
+                    <section class="left-small">
+                        <a class="left-off-canvas-toggle menu-icon" href="#"><span></span></a>
+                    </section>
+                    <section class="middle tab-bar-section">
+                        <ul class="title-area">
+                            <li class="name">
+                                <h1>
+                                    <a href="/">Ewaybot</a>
+                                </h1>
+                            </li>
+                        </ul>
+                    </section>
+                    <section class="right" id="qrcode-btn">
+                        <a href="#" data-reveal-id="qrModal">QR CODE</a>
+                        <div id="qrModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+                            <h2 id="modalTitle">Scan QR Code</h2>
+                            <div id="qrcode"></div>
+                            <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+                        </div>
+                    </section>
+                    <section class="right" id="logout">
+                        <a href="/logout">LOGOUT</a>
+                    </section>
+                    <section class="right" id="config">
+                        <a href="/config"><i class="fi-widget large"></i></a>
+                    </section>
+                    <section class="right" id="">
+                        <div id="user"><%= user %></div>
+                    </section>
+                </nav>
+            </div>
+            <aside class="left-off-canvas-menu">
+                <ul class="off-canvas-list" id="bots">
+                    <li><label>Ewaybot</label></li>
+                    <li class="bot" id="bot" data-bot=<%= bot %> data-wsport="">
+                        <a href="#"><%= bot %>
+                            <i class="fi-lightbulb small" id="bot-active">
+                            </i>
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+
+            <section class="main-section">
+                <div class="row">
+                    <div class="small-12 medium-6 large-4 columns">
+                        <div class="panel text-center" data-equalizer-watch style="height: 320px;">
+                            <div class="ctrl-title"><span class="label info">Command</span>
+                                <i class="fi-list-thumbnails"></i>
+                            </div>
+                            <div class="indicator text-left">
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <td>arm stat</td>
+                                        <td id="arm-stat"></td>
+                                        <td>cmd</td>
+                                        <td id="cmd-stat"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="large-12 columns predef-action">
+                                <div class="row">
+                                    <div class="small-12 columns">
+                                        <ul class="round button-group">
+                                            <li><a id="armInit" class="secondary button success">init</a></li>
+                                            <li><a id="armSwing" class="secondary button success">swing</a></li>
+                                        </ul>
+                                        <ul class="round button-group">
+                                            <li><a id="armWave" class="secondary button success">wave</a></li>
+                                            <li><a id="armStop" class="secondary button success">stop</a></li>
+                                        </ul>
+                                        <ul class="round button-group">
+                                            <li><a id="" class="secondary button success">predef</a></li>
+                                            <li><a id="" class="secondary button success">predef</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cmd">
+                                <div class="large-12 columns">
+                                    <div class="row collapse postfix-round">
+                                        <div class="small-8 columns">
+                                            <input id="bot-cmd" type="text" placeholder="command">
+                                        </div>
+                                        <div class="small-4 columns">
+                                            <a href="#" id="cmd-btn" class="button postfix">Go</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="small-12 medium-6 large-4 columns">
+                        <div class="panel text-center" data-equalizer-watch style="height: 320px;">
+                            <div class="ctrl-title" id="reserved">
+                                <span class="label info">Vision</span>
+                                <i class="fi-eye large"></i>
+                            </div>
+                            <canvas id="video-canvas" width="320" height="240">
+                                <p>
+                                    Please use a browser that supports HTML5 Canvas
+                                    <a href="http://www.google.com/chrome">Chrome</a>
+                                </p>
+                            </canvas>
+                        </div>
+                    </div>
+                    <div class="small-12 medium-6 large-4 columns">
+                        <div class="panel text-center" data-equalizer-watch style="height: 320px;">
+                            <div class="ctrl-title"><span class="label info">Navigation</span>
+                                <i class="fi-anchor large"></i>
+                            </div>
+                            <div class="indicator">
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <td>coon</td>
+                                        <td id="coon-stat"></td>
+                                        <td>location</td>
+                                        <td id="location" >0, 0</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <canvas id="auto-nav-map" width="200" height="200">
+                                "Canvas not supported by your browser, use Google Chrome please"
+                            </canvas>
+                        </div>
+                    </div>
+                    <div class="small-12 medium-6 large-4 columns">
+                        <div class="panel text-center" data-equalizer-watch style="height: 320px;">
+                            <div class="ctrl-title"><span class="label info">Move</span>
+                                <i class="fi-arrows-out"></i>
+                            </div>
+                            <div class="indicator text-left">
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <td>speed</td>
+                                        <td id="direct-pos">0</td>
+                                        <td>angle</td>
+                                        <td id="direct-angle">0</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="move-ctrl">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="small-12 medium-6 large-4 columns">
+                        <div class="panel text-center" data-equalizer-watch style="height: 320px;">
+                            <div class="ctrl-title"><span class="label info">Camera</span>
+                                <i class="fi-video large"></i>
+                            </div>
+                            <div class="indicator text-left">
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <td>camera status</td>
+                                        <td id="cam-stat"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="large-12 columns predef-action">
+                                <div class="row">
+                                    <div id="cam-control" class="small-12 columns">
+                                        <ul class="round">
+                                            <li><a id="camOn" class="button round">Cam ON</a></li>
+                                            <li><a id="camOff" class="button round">Cam OFF</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="small-12 medium-6 large-4 columns">
+                        <div class="panel" data-equalizer-watch style="height: 320px;">
+                            <div class="ctrl-title"><span class="label info">Arm</span>
+                                <i class="fi-target-two"></i>
+                            </div>
+                            <div class="indicator">
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <td>armXY</td>
+                                        <td id="arm-directxy">0</td>
+                                        <td>armZ</td>
+                                        <td id="sliderOutput" style="display: block;"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div>
+                                <div id="arm-xy"></div>
+                                <div class="arm-z">
+                                    <div class="range-slider round vertical-range" data-slider data-options="display_selector:#sliderOutput;vertical: true;">
+                                        <span class="range-slider-handle" role="slider" tabindex="0"></span>
+                                        <span class="range-slider-active-segment"></span>
+                                        <input type="hidden">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <a class="exit-off-canvas"></a>
+
+        </div>
+    </div>
+</section>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/javascripts/vendor/jquery.js"></script>
+<script src="/javascripts/foundation.min.js"></script>
+<script src="/javascripts/vendor/qrcode.min.js"></script>
+<script src="/javascripts/vendor/raphael-min.js"></script>
+<script src="/javascripts/spring.js"></script>
+<script src="/javascripts/vendor/jsmpg.js"></script>
+<script>
+    /*Foundaiton framework initialize*/
+    $(document).foundation();
+
+    /*Generate current web page QRCode*/
+    var qrcode = new QRCode(document.getElementById("qrcode"), window.location.href);
+
+    /* Socketio initialize */
+    var socket = io();
+    var canvas = document.getElementById('video-canvas');
+    var video_socket,vs1;
+    var player,pl1;
+    var current_selected;
+
+    var botId = $('#bot').data("bot").toString();
+
+    /* online robots */
+    var onlinebots = {}; // {botid:id,streamport:port}
+
+    /*Websocket connect & disconnect event*/
+    socket.on('connect', function(){
+        var user = $('#user').text();
+        socket.emit('webui', {user: user, bot: botId, socketid: socket.id});
+        $('#coon-stat').text("connect");
+    });
+
+    socket.on('disconnect', function(){
+        $('#coon-stat').text("disconnect");
+    });
+
+    /*
+     * Online robots synchronize to both desktop and mobile browser
+     * */
+//    socket.on('webuisync', function (msg) {
+//        onlinebots = msg;
+//        for(var bot in onlinebots){
+//            $('#bots').append('<li class="bot" id='+ bot + " data-wsport=" + onlinebots[bot] + '>' +
+//                    '<a href="#">bot '+ bot +
+//                    '<i class="fi-lightbulb small" id="bot-active"></i>' + '</a></li>');
+//        }
+//    });
+//
+
+//    socket.on('botonline', function(msg){
+//        $('#bots').append('<li class="bot"  id='+ msg.id + " data-wsport=" + msg.wsport + '>' +
+//                '<a href="#">bot '+ msg.id + '<i class="fi-lightbulb small" id="bot-active">' +
+//                '</i>' + '</a></li>');
+//    });
+
+    socket.on('botactive', function(msg){
+        if(msg.id == botId){
+            $('#bot-active').css('color','gold');
+            console.log('ws port ' + msg.wsport);
+            vs1 = new WebSocket( 'ws://192.168.1.128:'+ msg.wsport +'/' );
+            pl1 = new jsmpeg(vs1, {canvas:canvas});
+        }
+    });
+
+    socket.on('botoffline', function(msg){
+        if(msg == botId){
+            if(video_socket){
+                video_socket.close();
+            }
+            $('#bot-active').css('color','white');
+        }
+    });
+
+    /*
+     * auto-nav canvas component, support both click and touch event
+     */
+    var navcanvas = document.getElementById('auto-nav-map');
+    navcanvas.addEventListener('click', clickResponse);
+    navcanvas.addEventListener('touchstart', touchResponse, false);
+    var ctx = navcanvas.getContext('2d');
+    var botPos = {};          /*current position*/
+    var target = {};       /*target position*/
+    var movestat = 0;
+    var SPEEDSCLAR = 50;   /*speed scalar, small fast and large slow */
+    target.x = 0;
+    target.y = 0;
+    botPos.x = (navcanvas.width - 10) / 2;
+    botPos.y = (navcanvas.height - 10) / 2;
+    if(ctx){
+        ctx.fillStyle = "rgba(0,0,200,0.5)";
+        ctx.fillRect(botPos.x, botPos.y ,10,10)
+    }
+
+
+    /*
+     * Update bot position, with boolean algebra tricks this function can be more simple and elegant
+     * */
+    function update(){
+        if(botPos.x != target.x && botPos.y != target.y)
+        {
+            if(botPos.x < target.x && botPos.y < target.y){
+                botPos.x += (target.x - botPos.x) / SPEEDSCLAR;
+                botPos.y += (target.y - botPos.y) / SPEEDSCLAR;
+            }
+            else if(botPos.x > target.x && botPos.y > target.y){
+                botPos.x -= (botPos.x - target.x) / SPEEDSCLAR;
+                botPos.y -= (botPos.y - target.y) / SPEEDSCLAR;
+            }
+            else if(botPos.x < target.x && botPos.y > target.y){
+                botPos.x += (target.x - botPos.x) / SPEEDSCLAR;
+                botPos.y -= (botPos.y - target.y) / SPEEDSCLAR;
+            }
+            else if(botPos.x > target.x && botPos.y < target.y){
+                botPos.x -= (botPos.x - target.x) / SPEEDSCLAR;
+                botPos.y += (target.y - botPos.y) / SPEEDSCLAR;
+            }
+            $('#location').text(botPos.x.toFixed(0) +', '+botPos.y.toFixed(0));
+        }
+    }
+
+    function draw(){
+        update();
+        ctx.clearRect(0,0,navcanvas.width, navcanvas.height);
+        ctx.fillStyle = "rgba(0,0,200,0.5)";
+        ctx.fillRect(botPos.x, botPos.y ,10,10)
+        window.requestAnimationFrame(draw);
+    }
+
+    function move(evt){
+        if(!movestat){
+            movestat = 1;
+            window.requestAnimationFrame(draw);
+        }
+    }
+
+    /* Click event handler for desktop browser*/
+    function clickResponse(evt){
+        evt.preventDefault();
+        var rect = navcanvas.getBoundingClientRect();
+        target.x = evt.clientX - rect.left;
+        target.y = evt.clientY - rect.top;
+        socket.emit('movtarget', {x:target.x, y:target.y});
+        move();
+    }
+
+    /* Touch event handler for mobile decives*/
+    function touchResponse(evt){
+        evt.preventDefault();
+        var rect = navcanvas.getBoundingClientRect();
+        target.x = evt.targetTouches[0].clientX - rect.left;
+        target.y = evt.targetTouches[0].clientY - rect.top;
+        socket.emit('movtarget', {x:target.x, y:target.y});
+
+        move();
+    }
+
+
+    /* Bot arm Z-axis position, lift & down*/
+    $('[data-slider]').on('change.fndtn.slider', function(){
+          socket.emit('armZ', $( this ).attr('data-slider'));
+        console.log(socket.id);
+    });
+
+
+    /* Bot arm built-in gesture*/
+    $('#armInit').click(function (){
+        $('#arm-stat').text("init");
+        socket.emit('armBI', 'INIT');
+    });
+
+    $('#armSwing').click(function (){
+        $('#arm-stat').text("swing");
+        socket.emit('armBI', 'SWING');
+    });
+
+    $('#armWave').click(function (){
+        $('#arm-stat').text("wave");
+        socket.emit('armBI', 'WAVE');
+    });
+
+    $('#armStop').click(function (){
+        $('#arm-stat').text("stop");
+        socket.emit('armBI', 'STOP');
+    });
+
+    /* Camera switch*/
+    $('#camOn').click(function (){
+
+
+        $('#cam-stat').text("camera ON");
+        socket.emit('cam', 'ON');
+
+        if(video_socket){
+            video_socket.close();
+        }
+
+        // Setup the WebSocket connection and start the video player
+        video_socket = new WebSocket( 'ws://192.168.1.128:'+ current_selected +'/' );
+        player = new jsmpeg(video_socket, {canvas:canvas});
+
+        if(current_selected){
+            $('#cam-stat').text("camera ON");
+            socket.emit('cam', 'ON');
+
+            if(video_socket){
+                video_socket.close();
+            }
+
+            // Setup the WebSocket connection and start the video player
+            video_socket = new WebSocket( 'ws://192.168.1.128:'+ current_selected +'/' );
+            player = new jsmpeg(video_socket, {canvas:canvas});
+        }
+        else{
+            alert("select your bot first!");
+        }
+    });
+
+    $('#camOff').click(function (){
+        $('#cam-stat').text("camera OFF");
+        socket.emit('cam', 'OFF');
+    });
+
+    $('#cmd-btn').click(function(){
+        if($('#bot-cmd').val()){
+            socket.emit('botcmd', $('#bot-cmd').val());
+        }
+        $('#cmd-stat').text($('#bot-cmd').val());
+        $('#bot-cmd').val('');
+    });
+
+
+    $('#bots').on("click", '.bot', function(e) {
+        $( this ).addClass( "select");
+        $( this ).siblings().removeClass("select");
+        current_selected = $( this ).data("wsport");
+        if('WebSocket' in window){
+            console.log('we got websocket instance in current window');
+        }
+        if(vs1){
+            vs1.close();
+        }
+        vs1 = new WebSocket( 'ws://192.168.1.128:'+ current_selected +'/' );
+        pl1 = new jsmpeg(vs1, {canvas:canvas});
+    });
+</script>
+</body>
+</html>

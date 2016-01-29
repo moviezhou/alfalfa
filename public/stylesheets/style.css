@@ -1,0 +1,17 @@
+#top-bar {
+    left: 2rem;
+    right: 2rem;
+}
+
+.signup-wrapper {
+    width: 392px;
+    padding-top: 130px;
+    margin: 0 auto;
+}
+
+.signin-wrapper {
+    width: 392px;
+    padding-top: 130px;
+    margin: 0 auto;
+}
+

@@ -1,0 +1,54 @@
+body {
+  padding: 50px;
+  font: 14px "Helvetica Neue","Helvetica",Helvetica,Arial,sans-serif;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: "Proxima Nova","proxima-nova","Helvetica Neue",Helvetica,Arial,sans-serif;
+  color: #333;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  border-bottom: 1px solid #ddd;
+}
+
+nav {
+  position: fixed;
+  height: 55px;
+}
+
+.top-bar{
+  background: #0078a0;
+}
+
+.global-nav {
+  overflow: hidden;
+  height: 55px;
+}
+
+h1 a{
+  font-size: 1.3em;
+}
+
+#logo{
+  position: fixed;
+  top: 2px;
+  margin: 0px;
+  padding: 10px 25px;
+  width: auto;
+}
+
+#ctrpos {
+  margin-top: 20px;
+}
+
+
+footer {
+  font-size: 11px;
+  margin-top: 600px;
+}

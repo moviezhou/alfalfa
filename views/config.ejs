@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="/stylesheets/normalize.css"/>
+    <link rel="stylesheet" href="/stylesheets/foundation.css"/>
+    <link rel="stylesheet" href="/stylesheets/emmet.css"/>
+    <link rel="stylesheet" href="/foundation-icons/foundation-icons.css"/>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <script src="/javascripts/vendor/jquery.js"></script>
+    <script src="/javascripts/foundation.min.js"></script>
+</head>
+<body>
+<div class="sticky">
+    <nav class="tab-bar" data-topbar role="navigation" data-options="sticky_on: large">
+        <section id="top-bar" class="middle tab-bar-section">
+            <ul class="title-area">
+                <li class="name">
+                    <h1>
+                        <a href="/">Ewaybot</a>
+                    </h1>
+                </li>
+            </ul>
+        </section>
+    </nav>
+</div>
+<div class="avaliable-bots text-center">
+    <ul class="" id="bots">
+        <li class="droid-id">
+        </li>
+    </ul>
+    <table class="stack">
+        <thead>
+        <tr>
+            <th>Droid ID</th>
+            <th>Status</th>
+            <th>Select</th>
+        </tr>
+        </thead>
+        <tbody class="droid-avaliable">
+        </tbody>
+    </table>
+</div>
+<div class="text-center">
+    <form method="post" action="/config">
+        <!--<a href="#" id="btn-submit" class="button success">Save</a>-->
+        <input id="droid-selected" type="hidden" name="selectedID" >
+        <input class="button" type="submit" id="btn-submit" value="Save">
+    </form>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+    $(document).foundation();
+
+    /* Socketio initialize */
+    var socket = io();
+
+    var current_selected;
+
+    /* online robots */
+    var onlinebots = {}; // {botid:id,streamport:port}
+
+    /*Websocket connect & disconnect event*/
+    socket.on('connect', function(){
+        socket.emit('webui', 'connected');
+        $('#coon-stat').text("connect");
+    });
+
+    socket.on('disconnect', function(){
+        $('#coon-stat').text("disconnect");
+    });
+
+
+    socket.on('webuisync', function (msg) {
+        var onlinebots = msg;
+        for(var bot in onlinebots){
+            attachRowById(bot);
+        }
+    });
+
+    socket.on('botonline', function(msg){
+        attachRowById(msg.id);
+    });
+
+    socket.on('botoffline', function(msg){
+        console.log(msg + ' offline');
+        delete onlinebots[msg];
+        $('#' + msg).remove();//detach();
+    });
+
+    $('#btn-submit').click(function(){
+
+        //  $("[id$='-switch']")  select all element which id end with '-switch'
+
+        var isChecked = false;
+        var radioInputs = $('input[type="radio"]'); // switches radio lists
+
+
+        for(var i=0; i < radioInputs.length; i++){
+            if($(radioInputs[i]).is(':checked')){
+                var selectedID = radioInputs[i].id.slice(0,-7);
+                $('#droid-selected').val(selectedID);
+                isChecked = true;
+            }
+        }
+        if(!isChecked){
+            alert("choose one ");
+        }
+    });
+
+
+    // helper functions
+    function attachRowById(id){
+        $('.droid-avaliable').append(
+                '<tr '
+                + 'class = table-row '
+                + 'id='
+                + id
+                +'> <td>'
+                + id
+                + '</td> <td>avaliable</td> <td> '
+                + '<div class="switch"> <input class="switch-input" '
+                + 'id=' + id + '-switch'
+                + ' type="radio" name="testGroup"> '
+                + '<label class="switch-paddle" '
+                + 'for=' + id + '-switch'
+                + '></label> </div> </td> </tr>'
+        );
+    }
+</script>
+</body>
+</html>

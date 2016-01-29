@@ -1,0 +1,116 @@
+/**
+ * Created by moviezhou on 12/5/15.
+ */
+
+
+module.exports = function () {
+    function StreamServer(secret, broadcastport,socket){
+        this.STREAM_SECRET = secret;
+        //this.STREAM_PORT = 10210;
+        this.WEBSOCKET_PORT = broadcastport;
+        this.socket = socket;
+        this.STREAM_MAGIC_BYTES = 'jsmp';
+        this.width = 320;
+        this.height = 240;
+
+        //console.log('Listening for MPEG Stream on http://127.0.0.1:'+this.STREAM_PORT+'/<this.secret>/<this.width>/<this.height>');
+        //console.log('Awaiting WebSocket connections on ws://127.0.0.1:'+this.WEBSOCKET_PORT+'/');
+
+        this.socketServer = new (require('ws').Server)({port: this.WEBSOCKET_PORT});
+        var sock_server = this.socketServer;
+
+        this.socketServer.on('connection', function(socket){
+            // Send magic bytes and video size to the newly connected socket
+            // struct { char magic[4]; unsigned short width, height;}
+            var streamHeader = new Buffer(8);
+            streamHeader.write('jsmp');
+            streamHeader.writeUInt16BE(320, 4);
+            streamHeader.writeUInt16BE(240, 6);
+            socket.send(streamHeader, {binary:true});
+
+            console.log( 'New WebSocket Connection ('+sock_server.clients.length+' total)' );
+            socket.on('close', function(code, message){
+                console.log( 'Disconnected WebSocket ('+sock_server.clients.length+' total)' );
+            });
+        });
+
+        this.socketServer.broadcast = function(data, opts) {
+            for( var i in this.clients ) {
+                if (this.clients[i].readyState == 1) {
+                    this.clients[i].send(data, opts);
+                }
+                else {
+                    console.log( 'Error: Client ('+i+') not connected.' );
+                }
+            }
+        };
+    }
+
+    // HTTP Server to accept incomming MPEG Stream
+    StreamServer.prototype.serverStart = function (){
+        var secret = this.STREAM_SECRET;
+        var sockserver = this.socketServer;
+        var socket = this.socket;
+        var streamserver = require('http').createServer( function(request, response) {
+            var params = request.url.substr(1).split('/');
+            if( params[0] == secret ) {
+                this.width = (params[1] || 320)|0;
+                this.height = (params[2] || 240)|0;
+
+                console.log(
+                    'Stream Connected: ' + request.socket.remoteAddress +
+                    ':' + request.socket.remotePort + ' size: ' + this.width + 'x' + this.height
+                );
+                request.on('data', function(data){
+                    sockserver.broadcast(data, {binary:true});
+                });
+            }
+            else {
+                console.log(
+                    'Failed Stream Connection: '+ request.socket.remoteAddress +
+                    request.socket.remotePort + ' - wrong secret.'
+                );
+                response.end();
+            }
+        }).listen(0, function() {                   // Get a random port from os
+            var port = streamserver.address().port;
+            socket.emit('streamport', port);
+            console.log("opened server on %j", port);
+        });
+    };
+
+
+    //StreamServer.prototype.serverStart = function (){
+    //    var secret = this.STREAM_SECRET;
+    //    var sockserver = this.socketServer;
+    //    require('http').createServer( function(request, response) {
+    //        var params = request.url.substr(1).split('/');
+    //        if( params[0] == secret ) {
+    //            this.width = (params[1] || 320)|0;
+    //            this.height = (params[2] || 240)|0;
+    //
+    //            console.log(
+    //                'Stream Connected: ' + request.socket.remoteAddress +
+    //                ':' + request.socket.remotePort + ' size: ' + this.width + 'x' + this.height
+    //            );
+    //            request.on('data', function(data){
+    //                sockserver.broadcast(data, {binary:true});
+    //            });
+    //        }
+    //        else {
+    //            console.log(
+    //                'Failed Stream Connection: '+ request.socket.remoteAddress +
+    //                request.socket.remotePort + ' - wrong secret.'
+    //            );
+    //            response.end();
+    //        }
+    //    }).listen(this.STREAM_PORT);
+    //};
+
+
+    return StreamServer;
+}
+
+
+//8082, 10210;
+

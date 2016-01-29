@@ -1,0 +1,25 @@
+{
+  "development": {
+    "username": "alfalfa",
+    "password": "aflafla",
+    "database": "alfalfadb",
+    "host": "127.0.0.1",
+    "dialect": "mariadb",
+
+    "pool": {
+      "maxConnections": 20,
+      "maxIdleTime": 30
+    }
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "alfalfadb",
+    "host": "127.0.0.1",
+    "dialect": "mariadb",
+    "pool": {
+      "maxConnections": 20,
+      "maxIdleTime": 30
+    }
+  }
+}
